@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Andrea Robin — Path to Financial Freedom</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #fafafa;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    color: #1a1a1a;
+  }
+  h1 {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #1a1a1a;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 2rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .track-header {
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+  }
+  .header-job { background: #dbeafe; color: #1e3a8a; border: 1.5px solid #93c5fd; }
+  .header-studio { background: #fae8ff; color: #6b21a8; border: 1.5px solid #d8b4fe; }
+  .phase-label {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #888;
+    margin: 0.75rem 0 0.4rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+  .card {
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    border: 1.5px solid transparent;
+    position: relative;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+  .card h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .card p { font-size: 0.78rem; line-height: 1.5; }
+  .card .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 0.5rem;
+  }
+  .arrow-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 0.3rem 0;
+    color: #aaa;
+    font-size: 1.2rem;
+  }
+  .arrow-row span { flex: 1; text-align: center; }
+
+  /* Job search colours — blues */
+  .blue { background: #eff6ff; border-color: #93c5fd; }
+  .blue h3 { color: #1e3a8a; }
+  .blue p { color: #1d4ed8; }
+  .blue .tag { background: #bfdbfe; color: #1e3a8a; }
+
+  /* Studio colours — alternating pink / yellow / purple per phase */
+  .pink { background: #fdf2f8; border-color: #f9a8d4; }
+  .pink h3 { color: #831843; }
+  .pink p { color: #9d174d; }
+  .pink .tag { background: #fbcfe8; color: #831843; }
+
+  .yellow { background: #fefce8; border-color: #fde047; }
+  .yellow h3 { color: #713f12; }
+  .yellow p { color: #92400e; }
+  .yellow .tag { background: #fef08a; color: #713f12; }
+
+  .purple { background: #faf5ff; border-color: #d8b4fe; }
+  .purple h3 { color: #4c1d95; }
+  .purple p { color: #6d28d9; }
+  .purple .tag { background: #ede9fe; color: #4c1d95; }
+
+  /* Freedom block — rainbow gradient */
+  .freedom {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #fdf2f8 0%, #eff6ff 25%, #ecfdf5 50%, #fefce8 75%, #faf5ff 100%);
+    border: 2px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 1.2rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .freedom:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+  .freedom h3 { font-size: 1rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.4rem; }
+  .freedom p { font-size: 0.8rem; color: #555; line-height: 1.6; }
+
+  /* Three-col studio row */
+  .studio-three {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  /* Modal */
+  .modal-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-bg.open { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 480px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .modal h2 { font-size: 1.1rem; margin-bottom: 0.75rem; color: #1a1a1a; }
+  .modal p { font-size: 0.88rem; line-height: 1.7; color: #444; }
+  .modal .close {
+    position: absolute;
+    top: 1rem; right: 1.2rem;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: #888;
+    background: none;
+    border: none;
+    line-height: 1;
+  }
+  .modal .close:hover { color: #1a1a1a; }
+  .modal-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 0.8rem;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.75rem;
+    color: #bbb;
+  }
+</style>
+</head>
+<body>
+
+<h1>Andrea Robin — Path to Financial Freedom</h1>
+<p class="subtitle">Click any card to explore that step in detail</p>
+
+<div style="max-width:900px;margin:0 auto;">
+
+  <!-- Track headers -->
+  <div class="grid" style="margin-bottom:0;">
+    <div class="track-header header-job">Primary track — job search (weekdays)</div>
+    <div class="track-header header-studio">Studio track — evenings + weekends</div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="grid" style="align-items:start;">
+    <div>
+      <div class="phase-label">Now → offer</div>
+      <div class="card blue" onclick="open_modal('Applications', 'blue', 'Now → offer', 'Send targeted applications to UBC, SFU, BCIT, provincial health authorities, research institutes, and public sector bodies across BC. Your andrearobin.com site is your portfolio — lead with it. Prioritise organisations whose values align with equity, UDL, and systemic change, since that language already saturates your case studies. Weekdays are fully dedicated to this track: researching roles, tailoring cover letters, following up, and preparing for interviews.')">
+        <span class="tag">Weekdays</span>
+        <h3>Active applications</h3>
+        <p>Higher ed, research, public sector BC · $90–110k · andrearobin.com as portfolio · Full weekday focus</p>
+      </div>
+    </div>
+    <div>
+      <div class="phase-label">Now → month 2</div>
+      <div class="studio-three">
+        <div class="card pink" onclick="open_modal('Art Studio', 'pink', 'Now — Sun + Mon evenings', 'List your small drawings and paintings directly on andrearobinstudio.com this week. Price originals at $50–300 depending on size and complexity. Write a single honest post to your existing audience explaining what you\'re offering and why now. No new platforms, no new infrastructure — just activate what\'s already there. Every sale this month matters both financially and as proof of concept for the Shopify build to come.')">
+          <span class="tag">Sun + Mon</span>
+          <h3>Art studio</h3>
+          <p>Sell originals · $50–300 · existing audience first</p>
+        </div>
+        <div class="card yellow" onclick="open_modal('Therapeutic Studio', 'yellow', 'Now — Wed evenings', 'Publish and announce the digital product that already exists on therapeuticstudio.ca. Price it at $27–97 depending on depth and format. Write a simple launch post to your existing audience — not a campaign, just an honest invitation. The goal this month is not scale, it\'s activation. Once it\'s live and generating any revenue, you have proof of the model and a foundation to build the Shopify store on in phase 2.')">
+          <span class="tag">Wed eves</span>
+          <h3>Therapeutic</h3>
+          <p>Launch digital product · $27–97 · ship what exists</p>
+        </div>
+        <div class="card purple" onclick="open_modal('Accessible Learning Labs', 'purple', 'Now — Tue evenings', 'Open the paid tier on your Substack at $8–15/month and list your existing digital product separately. Both can generate revenue within days using your existing audience. Substack is frictionless to monetise — the paid tier can go live in under an hour. Your Tuesday evenings this month are for activating these two things and writing the first piece of paid content.')">
+          <span class="tag">Tue eves</span>
+          <h3>ALL</h3>
+          <p>Substack paid · $8–15/mo · digital product listed</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Arrow -->
+  <div class="arrow-row"><span>↓</span><span>↓</span></div>
+
+  <!-- PHASE 2 -->
+  <div class="grid" style="align-items:start;">
+    <div>
+      <div class="phase-label">Offer accepted</div>
+      <div class="card blue" onclick="open_modal('Role Secured', 'blue', 'Offer accepted', 'Negotiate firmly to the top of the band — $105–110k is the target. Use your case studies, your breadth across higher ed and public sector, and your UDL + equity specialisation as leverage. Once the offer is signed, resist the urge to immediately redirect surplus. Spend the first three months building a one-month cash buffer before allocating anything to studios or savings. Set up separate accounts: one for bills, one for buffer, one for studio costs, one for savings.')">
+        <span class="tag">Months 1–3</span>
+        <h3>Role secured</h3>
+        <p>Negotiate to $105–110k · build cash buffer first · set up budget + tracking</p>
+      </div>
+    </div>
+    <div>
+      <div class="phase-label">Months 3–6</div>
+      <div class="card pink" onclick="open_modal('Studios Stabilise', 'pink', 'Months 3–6', 'Once salary covers life, the studios shift from survival tools to intentional creative businesses. Keep the same schedule — Sunday and Monday evenings for art, Tuesday for ALL, Wednesday for Therapeutic. Set up Shopify as the unified transaction hub for all three studios. Start one YouTube channel — whichever studio feels most natural on camera — and publish consistently. Reinvest early studio revenue into equipment, production quality, or the Shopify subscription rather than drawing it as income.')">
+        <span class="tag">Same schedule</span>
+        <h3>Studios stabilise</h3>
+        <p>Salary removes survival pressure · Shopify store set up · YouTube begins · revenue reinvested</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Arrow -->
+  <div class="arrow-row"><span>↓</span><span>↓</span></div>
+
+  <!-- PHASE 3 -->
+  <div class="grid" style="align-items:start;">
+    <div>
+      <div class="phase-label">Month 6–18</div>
+      <div class="card blue" onclick="open_modal('Career Evolution', 'blue', 'Month 6–18', 'Your career arc is already mapped: Learning Design Specialist → Accessibility Advisor in higher education → Counselling Psychology. The studios reinforce each transition directly — Accessible Learning Labs builds the public profile and expertise that positions you for an Accessibility Advisor role, and Therapeutic Studio builds the client-facing therapeutic practice that supports the Counselling Psychology path. Each career step funds the education for the next.')">
+        <span class="tag">Long arc</span>
+        <h3>Career evolution</h3>
+        <p>LDS → Accessibility Advisor → Counselling Psych · Studios reinforce each step</p>
+      </div>
+    </div>
+    <div>
+      <div class="phase-label">Month 6–18</div>
+      <div class="card yellow" onclick="open_modal('Studios Build Momentum', 'yellow', 'Month 6–18', 'By this phase, all three YouTube channels are publishing regularly and driving traffic to Shopify. The art studio has prints available on print-on-demand alongside originals. Therapeutic Studio is running its first group program or intensive at $200–500 per participant. Accessible Learning Labs has a bundled digital toolkit at $49–149 and is beginning to offer consulting. RRSP contributions start once the emergency fund (3 months of expenses) is fully funded.')">
+        <span class="tag">Building</span>
+        <h3>Studios build momentum</h3>
+        <p>YouTube growing · Shopify active · first group program · RRSP + emergency fund started</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Arrow -->
+  <div class="arrow-row"><span style="flex:none;width:100%;text-align:center;">↓</span></div>
+
+  <!-- PHASE 4: Freedom -->
+  <div class="freedom" onclick="open_modal('Financial Freedom', 'rainbow', 'Year 2–3 onward', 'Financial freedom for you is not a single number — it is a condition: your options exceed your obligations. Salary funds life and savings. Studios fund growth, creative expression, and future career transitions. RRSP and TFSA are growing steadily. Each year, the Counselling Psychology transition becomes more financially viable. The studios are no longer survival tools — they are the architecture of a life that is coherent, equitable, and built entirely around who you already are.')">
+    <h3>✦ Financial freedom — salary + studio income compounding ✦</h3>
+    <p>Primary role funds life + savings · Studios fund growth + future transitions · RRSP + TFSA building<br>Career path and studios reinforce each other · Options expand each year · Counselling Psych transition funded</p>
+  </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal" onclick="close_modal(event)">
+  <div class="modal">
+    <button class="close" onclick="document.getElementById('modal').classList.remove('open')">×</button>
+    <span class="modal-tag" id="modal-tag"></span>
+    <h2 id="modal-title"></h2>
+    <p id="modal-body"></p>
+  </div>
+</div>
+
+<footer>Andrea Robin · andrearobin.com · generated with Claude</footer>
+
+<script>
+  const colours = {
+    blue:   { tag: '#bfdbfe', tagText: '#1e3a8a' },
+    pink:   { tag: '#fbcfe8', tagText: '#831843' },
+    yellow: { tag: '#fef08a', tagText: '#713f12' },
+    purple: { tag: '#ede9fe', tagText: '#4c1d95' },
+    rainbow:{ tag: '#e5e7eb', tagText: '#1a1a1a' },
+  };
+
+  function open_modal(title, colour, phase, body) {
+    const c = colours[colour] || colours.blue;
+    const tag = document.getElementById('modal-tag');
+    tag.textContent = phase;
+    tag.style.background = c.tag;
+    tag.style.color = c.tagText;
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-body').textContent = body;
+    document.getElementById('modal').classList.add('open');
+  }
+
+  function close_modal(e) {
+    if (e.target.id === 'modal') {
+      document.getElementById('modal').classList.remove('open');
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.getElementById('modal').classList.remove('open');
+  });
+</script>
+</body>
+</html>

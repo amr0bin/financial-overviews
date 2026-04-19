@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skills + Tools for Financial Freedom</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #fafafa;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    color: #1a1a1a;
+  }
+  h1 {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 2rem;
+  }
+  .table-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.6rem;
+  }
+  thead th {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0 0.75rem 0.5rem;
+    text-align: left;
+  }
+  thead th:first-child { text-align: center; width: 130px; }
+  thead th:nth-child(3),
+  thead th:nth-child(4) { width: 220px; }
+  thead th:last-child { width: 170px; }
+
+  tr.phase-row td {
+    padding: 0.85rem 0.9rem;
+    vertical-align: top;
+    border: 1.5px solid transparent;
+    transition: filter 0.15s;
+  }
+  tr.phase-row:hover td { filter: brightness(0.97); }
+  tr.phase-row td:first-child {
+    border-radius: 12px 0 0 12px;
+    text-align: center;
+    cursor: default;
+  }
+  tr.phase-row td:last-child {
+    border-radius: 0 12px 12px 0;
+  }
+  tr.phase-row td:not(:first-child):not(:last-child) {
+    cursor: pointer;
+  }
+  tr.phase-row td:not(:first-child):not(:last-child):hover {
+    filter: brightness(0.95);
+  }
+
+  .phase-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+  .phase-num {
+    font-size: 0.72rem;
+    opacity: 0.7;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  .phase-crit {
+    font-size: 0.72rem;
+    font-style: italic;
+    opacity: 0.75;
+    display: block;
+  }
+  td .skill-title {
+    font-weight: 600;
+    font-size: 0.88rem;
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+  td .skill-body {
+    font-size: 0.78rem;
+    line-height: 1.55;
+    opacity: 0.85;
+  }
+  td .fail-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  td .fail-body {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    opacity: 0.8;
+  }
+  .you-are {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: #1a1a1a;
+    color: white;
+    margin-top: 0.4rem;
+  }
+
+  /* Phase colour themes */
+  .p1 td { background: #fff0f3; border-color: #fca5a5; }
+  .p1 .phase-name { color: #9f1239; }
+  .p1 td .skill-title { color: #be123c; }
+  .p1 td .fail-title { color: #be123c; }
+
+  .p2 td { background: #fffbeb; border-color: #fcd34d; }
+  .p2 .phase-name { color: #92400e; }
+  .p2 td .skill-title { color: #b45309; }
+  .p2 td .fail-title { color: #b45309; }
+
+  .p3 td { background: #f0fdf4; border-color: #86efac; }
+  .p3 .phase-name { color: #14532d; }
+  .p3 td .skill-title { color: #15803d; }
+  .p3 td .fail-title { color: #15803d; }
+
+  .p4 td { background: #ecfeff; border-color: #67e8f9; }
+  .p4 .phase-name { color: #164e63; }
+  .p4 td .skill-title { color: #0e7490; }
+  .p4 td .fail-title { color: #0e7490; }
+
+  .p5 td { background: #faf5ff; border-color: #c4b5fd; }
+  .p5 .phase-name { color: #4c1d95; }
+  .p5 td .skill-title { color: #6d28d9; }
+  .p5 td .fail-title { color: #6d28d9; }
+
+  .p6 td { background: #eff6ff; border-color: #93c5fd; }
+  .p6 .phase-name { color: #1e3a8a; }
+  .p6 td .skill-title { color: #1d4ed8; }
+  .p6 td .fail-title { color: #1d4ed8; }
+
+  /* Modal */
+  .modal-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-bg.open { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 92%;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .modal h2 { font-size: 1.1rem; margin-bottom: 0.6rem; }
+  .modal p { font-size: 0.88rem; line-height: 1.75; color: #444; }
+  .modal ul { padding-left: 1.2rem; margin-top: 0.5rem; }
+  .modal ul li { font-size: 0.85rem; line-height: 1.65; color: #444; margin-bottom: 0.2rem; }
+  .modal .close {
+    position: absolute; top: 1rem; right: 1.2rem;
+    font-size: 1.4rem; cursor: pointer; color: #888;
+    background: none; border: none; line-height: 1;
+  }
+  .modal .close:hover { color: #1a1a1a; }
+  .modal-phase {
+    font-size: 0.72rem; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px;
+    display: inline-block; margin-bottom: 0.6rem;
+  }
+
+  footer { text-align: center; margin-top: 2.5rem; font-size: 0.75rem; color: #bbb; }
+</style>
+</head>
+<body>
+
+<h1>Skills + tools for financial freedom</h1>
+<p class="subtitle">What's actually load-bearing at each phase · click any cell to go deeper</p>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Phase</th>
+      <th>Critical skill</th>
+      <th>Supporting tools</th>
+      <th>Failure mode</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <!-- PHASE 1: SURVIVAL -->
+    <tr class="phase-row p1">
+      <td>
+        <span class="phase-num">Phase 1</span>
+        <span class="phase-name">Survival</span>
+        <span class="phase-crit">No stable income · cash in the door fast</span>
+        <span class="you-are">← you are here</span>
+      </td>
+      <td onclick="open_modal('Honest self-assessment', 'p1', 'Phase 1 — Survival', 'The most important thing you can do in survival mode is face the numbers without flinching. What does it actually cost you to exist each month? Rent, food, phone, transit — that is your floor. Every decision gets made relative to that number. The second half of this skill is activating what already exists before building anything new. You have three studios with existing audiences and existing products. Ship those before you design a single new thing.', ['Know your exact monthly floor — rent, food, phone, transit', 'List every asset you can monetise right now', 'Activate existing products and audiences before building anything new', 'Make one sale before you plan the next ten'])">
+        <span class="skill-title">Honest self-assessment</span>
+        <span class="skill-body">Face the exact number. Activate what exists before building anything new.</span>
+      </td>
+      <td onclick="open_modal('Survival tools', 'p1', 'Phase 1 — Survival', 'Keep it as simple as possible. A single Google Sheet with two columns — money in, money out — updated every week. Your existing websites and audiences are your sales channels. No new platforms until you have revenue from what you already have. The goal is not a beautiful system, it is cash moving.', ['Google Sheets — income vs. expenses, updated weekly', 'Your existing websites and email lists', 'Direct payment links (e-transfer, PayPal, Stripe)', 'No new platforms until existing ones generate revenue'])">
+        <span class="skill-title">Simple tracking</span>
+        <span class="skill-body">One spreadsheet. Income vs expenses updated weekly. No new platforms yet.</span>
+      </td>
+      <td onclick="open_modal('Failure mode: planning instead of selling', 'p1', 'Phase 1 — Survival', 'The most common survival-phase failure is spending the hours you should be selling on planning what you will sell. You have three things you could list for sale today. The planning feels productive. It is not. Activation is the only thing that changes your financial position right now. Ship first, refine later.', ['Building infrastructure before generating revenue', 'Designing new products when existing ones are unlisted', 'Researching platforms instead of using the ones you have', 'Waiting until everything is perfect before announcing'])">
+        <span class="fail-title">Planning instead of selling</span>
+        <span class="fail-body">You have sellable things. Ship them before you plan the next ones.</span>
+      </td>
+    </tr>
+
+    <!-- PHASE 2: BASELINE -->
+    <tr class="phase-row p2">
+      <td>
+        <span class="phase-num">Phase 2</span>
+        <span class="phase-name">Baseline</span>
+        <span class="phase-crit">Bills covered · predictability over growth</span>
+      </td>
+      <td onclick="open_modal('Basic budgeting', 'p2', 'Phase 2 — Baseline', 'Once income is covering expenses — whether from a salary offer or studio revenue — the critical skill shifts to predictability. Irregular income is manageable only if you budget to your lowest expected month, not your average. The 50/30/20 rule is a useful starting framework: 50% to needs, 30% to wants, 20% to savings and debt. For you, zero-based budgeting may be more useful once studio income begins, because it forces you to assign every dollar a job before it arrives.', ['Budget to your lowest expected month, not your average', '50/30/20 as a starting framework', 'Zero-based budgeting once income becomes multi-source', 'Separate accounts for bills, buffer, studio costs, savings'])">
+        <span class="skill-title">Basic budgeting</span>
+        <span class="skill-body">Budget to your lowest month. Assign every dollar before it arrives.</span>
+      </td>
+      <td onclick="open_modal('Baseline tools', 'p2', 'Phase 2 — Baseline', 'YNAB (You Need a Budget) is the gold standard for irregular income — it is built around the zero-based method and handles variable income well. It costs about $14 CAD/month. If that feels like too much right now, a well-structured Google Sheet works fine. The key is separate accounts: one for fixed bills, one for a cash buffer, one for studio operating costs, one for savings. Even if all four are at the same bank, the separation makes the budget visible.', ['YNAB — best for irregular income, zero-based method', 'Google Sheets — free and flexible', 'Separate bank accounts: bills / buffer / studio / savings', 'Automate fixed bill payments immediately'])">
+        <span class="skill-title">YNAB or spreadsheet</span>
+        <span class="skill-body">Separate accounts for bills, buffer, studio costs, savings.</span>
+      </td>
+      <td onclick="open_modal('Failure mode: lifestyle creep before buffer exists', 'p2', 'Phase 2 — Baseline', 'The moment income stabilises, the instinct is to relax spending. This is natural and understandable — and it is the most reliable way to stay stuck at baseline. The first surplus dollar should go to an emergency fund, not a reward. A one-month cash buffer changes your psychology entirely: you stop making fear-based decisions. Build the buffer before you upgrade anything.', ['Increasing spending the moment income stabilises', 'Treating first surplus as discretionary', 'Skipping the emergency fund in favour of investing', 'Not separating accounts so surplus is invisible'])">
+        <span class="fail-title">Lifestyle creep before buffer</span>
+        <span class="fail-body">First surplus goes to emergency fund. Buffer before upgrades.</span>
+      </td>
+    </tr>
+
+    <!-- PHASE 3: STABILITY -->
+    <tr class="phase-row p3">
+      <td>
+        <span class="phase-num">Phase 3</span>
+        <span class="phase-name">Stability</span>
+        <span class="phase-crit">Buffer growing · multiple income streams active</span>
+      </td>
+      <td onclick="open_modal('Income diversification', 'p3', 'Phase 3 — Stability', 'Once you have a buffer and a predictable baseline, the work is adding income streams one at a time rather than all at once. The pattern for each studio layer is the same: free content builds audience, paid content or products convert that audience, passive products (digital downloads, print-on-demand) eventually generate revenue without your direct time. Add one new stream, stabilise it, then add the next. Three studios running this arc simultaneously is ambitious but workable because the schedule is already fixed.', ['Add income streams one at a time — depth before breadth', 'Pattern for each layer: free → paid → passive', 'Each studio follows the same arc independently', 'Reinvest early studio revenue before drawing it as income'])">
+        <span class="skill-title">Income diversification</span>
+        <span class="skill-body">Add streams one at a time. Free → paid → passive for each studio.</span>
+      </td>
+      <td onclick="open_modal('Stability tools', 'p3', 'Phase 3 — Stability', 'Wave Accounting is free and built for Canadian self-employed people — it handles HST tracking, invoicing, and basic reporting. Once studio income becomes regular, register for HST (required above $30k CAD annually, but worth doing earlier for input tax credits). Keep studio income in a separate business account and set aside 25–30% of every payment for CRA. Shopify becomes the transaction hub across all three studios at this stage.', ['Wave Accounting — free, Canadian, HST-aware', 'Separate business bank account from personal', 'Set aside 25–30% of every studio payment for CRA', 'Register for HST proactively — do not wait for the threshold', 'Shopify as unified transaction hub'])">
+        <span class="skill-title">Wave or QuickBooks</span>
+        <span class="skill-body">Self-employed accounting. Separate business account. 25–30% aside for CRA.</span>
+      </td>
+      <td onclick="open_modal('Failure mode: too many streams at once', 'p3', 'Phase 3 — Stability', 'The energy of stability often leads to overextension — launching too many things simultaneously so that none of them get enough attention to work. Three studios is already ambitious. The discipline at this phase is making one thing within each studio work before adding the next layer. A Shopify store with three products that actually sell is more valuable than ten products with no marketing behind any of them.', ['Launching multiple streams before any are generating reliably', 'Spreading attention across too many platforms', 'Adding new studio layers before existing ones are stable', 'Confusing activity with progress'])">
+        <span class="fail-title">Too many streams at once</span>
+        <span class="fail-body">Depth over breadth. Make one thing work before adding the next.</span>
+      </td>
+    </tr>
+
+    <!-- PHASE 4: GROWTH -->
+    <tr class="phase-row p4">
+      <td>
+        <span class="phase-num">Phase 4</span>
+        <span class="phase-name">Growth</span>
+        <span class="phase-crit">Surplus exists · money working while you work</span>
+      </td>
+      <td onclick="open_modal('Basic investing literacy', 'p4', 'Phase 4 — Growth', 'For Canadians, the sequence is almost always TFSA first, then RRSP. The TFSA is tax-free on growth and withdrawals — it works for any income level and is the most flexible account you have. The RRSP deduction is most powerful when your income is high, which is why it becomes more valuable once the salary is in place. Index funds — broadly diversified, low-cost — outperform most active strategies over time. You do not need to understand markets deeply to invest well. You need to start earlier than feels comfortable.', ['TFSA first — tax-free growth and withdrawals, any income level', 'RRSP next — most powerful at higher income levels', 'Index funds: low cost, broadly diversified, outperform most active strategies', 'Automate contributions so you invest before you spend', 'Start earlier than feels comfortable'])">
+        <span class="skill-title">Basic investing literacy</span>
+        <span class="skill-body">TFSA first, then RRSP. Index funds. Automate before you spend it.</span>
+      </td>
+      <td onclick="open_modal('Growth tools', 'p4', 'Phase 4 — Growth', 'Wealthsimple is the clearest starting point for most Canadians — commission-free, TFSA and RRSP accounts, and a managed portfolio option (VGRO-equivalent) that requires no active decisions. VGRO itself (Vanguard Growth ETF Portfolio) is a single-fund solution that gives you global diversification at 0.24% MER. The key behaviour at this phase is automation: set up a pre-authorized contribution that moves money into your investment account on payday, before you have a chance to spend it.', ['Wealthsimple — commission-free, TFSA + RRSP, Canadian', 'VGRO — single-fund global diversification at low cost', 'Pre-authorized contributions on payday', 'Do not check the balance more than quarterly'])">
+        <span class="skill-title">Wealthsimple + VGRO</span>
+        <span class="skill-body">Low-cost index funds. Automate on payday. Do not check it constantly.</span>
+      </td>
+      <td onclick="open_modal('Failure mode: waiting until you feel ready', 'p4', 'Phase 4 — Growth', 'Most people wait to invest until they understand the market well enough to feel confident. That day does not come. The market is not comprehensible in the way that would make you feel ready. Time in the market reliably beats timing the market — the person who invests $200/month for 20 years at average market returns significantly outperforms the person who waits five years to invest $400/month. Start with whatever you have. Increase it when you can.', ['Waiting to understand markets before starting', 'Keeping savings in a chequing account "for now"', 'Trying to time the market or pick individual stocks', 'Letting perfect be the enemy of started'])">
+        <span class="fail-title">Waiting until you feel ready</span>
+        <span class="fail-body">Time in market beats timing the market. Start with whatever you have.</span>
+      </td>
+    </tr>
+
+    <!-- PHASE 5: MOMENTUM -->
+    <tr class="phase-row p5">
+      <td>
+        <span class="phase-num">Phase 5</span>
+        <span class="phase-name">Momentum</span>
+        <span class="phase-crit">Passive income compounding · systems over hustle</span>
+      </td>
+      <td onclick="open_modal('Systems thinking', 'p5', 'Phase 5 — Momentum', 'At momentum phase, the shift is from doing the work to designing the system that does the work. For the studios, this means evergreen content (YouTube videos that keep getting views), evergreen products (digital downloads that sell without new effort), and automated sequences (an email welcome series that converts subscribers to buyers without you writing individual emails). Your existing professional expertise in systems design, UDL, and organisational architecture is directly applicable here — you already know how to build systems that outlast the project.', ['Evergreen content: YouTube videos that keep working after publication', 'Evergreen products: digital downloads with no ongoing fulfillment cost', 'Automated email sequences for each studio', 'Replace yourself in every repeatable task'])">
+        <span class="skill-title">Systems thinking</span>
+        <span class="skill-body">Evergreen content and products. Automate every repeatable task.</span>
+      </td>
+      <td onclick="open_modal('Momentum tools', 'p5', 'Phase 5 — Momentum', 'ConvertKit (now Kit) is the email platform most used by creators at this scale — it handles automations, sequences, and segmentation well, and integrates cleanly with Shopify. Buffer or Later for scheduling social and YouTube content in batches rather than daily. Shopify flows for automated order confirmations, upsells, and membership renewals. The goal is to batch your active work into your scheduled studio time and let the rest run without you.', ['ConvertKit (Kit) — email automations and sequences', 'Buffer or Later — batch schedule content', 'Shopify flows — automated order and membership handling', 'YouTube as the evergreen audience engine across all three studios'])">
+        <span class="skill-title">ConvertKit + Shopify flows</span>
+        <span class="skill-body">Email automations, batch content scheduling, Shopify flows.</span>
+      </td>
+      <td onclick="open_modal('Failure mode: scaling what should be automated', 'p5', 'Phase 5 — Momentum', 'The momentum trap is working harder on things that should be systematised. If you are personally answering every customer question, personally posting every piece of content, personally processing every order — you are doing operations, not building a business. Busyness at this stage feels like progress but is often the opposite. The question to ask about every recurring task is: can this be automated, templated, or removed?', ['Manually doing tasks that could be automated', 'Posting content reactively instead of batching in scheduled time', 'Confusing busyness with progress', 'Adding more active income streams instead of deepening passive ones'])">
+        <span class="fail-title">Scaling what should be automated</span>
+        <span class="fail-body">Busyness is not progress at this stage. Automate or remove.</span>
+      </td>
+    </tr>
+
+    <!-- PHASE 6: FREEDOM -->
+    <tr class="phase-row p6">
+      <td>
+        <span class="phase-num">Phase 6</span>
+        <span class="phase-name">Freedom</span>
+        <span class="phase-crit">Options exceed obligations · work is choice</span>
+      </td>
+      <td onclick="open_modal('Long-term thinking', 'p6', 'Phase 6 — Freedom', 'Financial freedom is not a number. It is a condition: your options exceed your obligations. For you specifically, it means the salary funds life and savings without stress, the studios fund creative expression and career transitions, and neither depends on the other for survival. The Counselling Psychology path becomes viable because it is funded by the infrastructure you have built — not because you have saved a specific dollar amount. Define what freedom means in terms of your life, not in terms of a balance sheet.', ['Define freedom as a condition, not a number', 'Options exceeding obligations is the threshold', 'Work chosen rather than required', 'Career transitions funded by built infrastructure'])">
+        <span class="skill-title">Long-term thinking</span>
+        <span class="skill-body">Define freedom as a condition, not a number. Options exceed obligations.</span>
+      </td>
+      <td onclick="open_modal('Freedom toolkit — Canadian', 'p6', 'Phase 6 — Freedom', 'The complete Canadian financial freedom toolkit for someone with salary plus self-employment income: TFSA maxed annually (2025 limit: $7,000), RRSP contributions calculated to optimise tax bracket, HST account registered and filed quarterly, a separate business account for studio income, Wave or a bookkeeper for annual tax filing, and a fee-only financial planner consulted once a year (not a commission-based advisor). Optional but powerful: incorporate the studio business once revenue consistently exceeds $50k, which creates tax-deferral advantages.', ['TFSA maxed annually — first priority', 'RRSP contributions calculated to optimise marginal tax rate', 'HST registered and filed quarterly', 'Business account separate from personal', 'Fee-only financial planner annually — not commission-based', 'Consider incorporation once studio revenue exceeds $50k consistently'])">
+        <span class="skill-title">Complete CA toolkit</span>
+        <span class="skill-body">TFSA + RRSP maxed · HST registered · fee-only planner annually.</span>
+      </td>
+      <td onclick="open_modal('Failure mode: never defining enough', 'p6', 'Phase 6 — Freedom', 'The most common reason people reach financial stability but not freedom is that they never defined what enough looks like. The goal keeps moving — more savings, more revenue, more security — and freedom stays perpetually just out of reach. This is especially common among people who have spent time in survival mode, because scarcity thinking is hard to unlearn even after the circumstances change. Define your enough number and your enough conditions deliberately, before you reach them.', ['Letting the goal move every time you approach it', 'Continuing to optimise finances when conditions have already been met', 'Inability to unlearn scarcity thinking after circumstances change', 'Never deciding what enough looks and feels like'])">
+        <span class="fail-title">Never defining enough</span>
+        <span class="fail-body">The goal moves if you never set it. Define enough before you reach it.</span>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal" onclick="close_modal(event)">
+  <div class="modal">
+    <button class="close" onclick="document.getElementById('modal').classList.remove('open')">×</button>
+    <span class="modal-phase" id="modal-phase"></span>
+    <h2 id="modal-title"></h2>
+    <p id="modal-body"></p>
+    <ul id="modal-list" style="margin-top:0.75rem;"></ul>
+  </div>
+</div>
+
+<footer>Andrea Robin · andrearobin.com · generated with Claude</footer>
+
+<script>
+  const phaseColours = {
+    p1: { bg: '#fff0f3', text: '#9f1239' },
+    p2: { bg: '#fffbeb', text: '#92400e' },
+    p3: { bg: '#f0fdf4', text: '#14532d' },
+    p4: { bg: '#ecfeff', text: '#164e63' },
+    p5: { bg: '#faf5ff', text: '#4c1d95' },
+    p6: { bg: '#eff6ff', text: '#1e3a8a' },
+  };
+
+  function open_modal(title, phase, phaseLabel, body, bullets) {
+    const c = phaseColours[phase] || phaseColours.p1;
+    const tag = document.getElementById('modal-phase');
+    tag.textContent = phaseLabel;
+    tag.style.background = c.bg;
+    tag.style.color = c.text;
+    tag.style.border = '1px solid currentColor';
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-body').textContent = body;
+    const list = document.getElementById('modal-list');
+    list.innerHTML = '';
+    if (bullets && bullets.length) {
+      bullets.forEach(b => {
+        const li = document.createElement('li');
+        li.textContent = b;
+        list.appendChild(li);
+      });
+    }
+    document.getElementById('modal').classList.add('open');
+  }
+
+  function close_modal(e) {
+    if (e.target.id === 'modal') {
+      document.getElementById('modal').classList.remove('open');
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.getElementById('modal').classList.remove('open');
+  });
+</script>
+</body>
+</html>
